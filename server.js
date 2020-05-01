@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const logger = require('morgan')
 const PORT = process.env.PORT || 3000
 const db = require('./db')
+const User = require('./models/user')
 const Post = require('./models/post')
 
 const app = express()
@@ -42,7 +43,6 @@ app.get('/posts/:id', async (req, res) => {
 })
 
 app.post('/posts', async (req, res) => {
-    console.log(req.body)
     try {
         const post = await new Post(req.body)
         await post.save()
@@ -74,6 +74,15 @@ app.delete('/posts/:id', async (req, res) => {
             return res.status(200).send("Post deleted")
         }
         throw new Error("Post not found")
+    } catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+})
+
+app.get('/users', async (req, res) => {
+    try {
+        const users = await User.find()
+        res.json(users)
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
