@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const logger = require('morgan')
 const PORT = process.env.PORT || 3000
-const db = require('./db')
+const db = require('./db/connection')
 const Post = require('./models/post')
 
 const app = express()
@@ -12,13 +12,9 @@ app.use(logger('dev'))
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
-app.listen(PORT, () => {
-    console.log(`Express server listening on port ${PORT}`)
-})
+app.listen(PORT, () => console.log(`Express server listening on port ${PORT}`))
 
-app.get('/', (req, res) => {
-    res.send("This is root!")
-});
+app.get('/', (req, res) => res.send("This is root!"))
 
 app.get('/posts', async (req, res) => {
     try {
